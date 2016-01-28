@@ -50,7 +50,8 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.display_link = new System.Windows.Forms.Label();
             this.pause = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Way_to_save
@@ -254,21 +255,33 @@
             this.pause.UseVisualStyleBackColor = true;
             this.pause.Click += new System.EventHandler(this.button1_Click_2);
             // 
-            // label6
+            // textBox1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(439, 516);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(182, 13);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "Мои контакты DevDimit@yandex.ru";
+            this.textBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(428, 526);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(184, 13);
+            this.textBox1.TabIndex = 24;
+            this.textBox1.Text = "Мои контакты DevDimit@yandex.ru ";
+            // 
+            // textBox2
+            // 
+            this.textBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Location = new System.Drawing.Point(199, 552);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(413, 13);
+            this.textBox2.TabIndex = 25;
+            this.textBox2.Text = "Ссылка на исходный код GitHub https://github.com/devdimit/MangaDownloader";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 532);
-            this.Controls.Add(this.label6);
+            this.ClientSize = new System.Drawing.Size(624, 571);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.pause);
             this.Controls.Add(this.display_link);
             this.Controls.Add(this.stop);
@@ -321,7 +334,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label display_link;
         private System.Windows.Forms.Button pause;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 
