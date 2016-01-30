@@ -27,12 +27,16 @@ namespace WindowsFormsApplication2
         int schet = 0;//счетчик прогресс бара
         int end_potok = 0;//код состояния потока
         string buf2;
+        int count_page;
+        int err = 0;//проверка правильности пути папки
+
         bool pause_download = false;//t-пауза включена, f-выключена
         Func_saver func_saver = new Func_saver();//класс хранения функций
-
+        int percent;
         string HTML_first_page;//код страницы где главы лежат
         string site_link;
         string global_name;//имя манги
+        string subpath;
         mang_info[] arr_mang_inf = new mang_info[2000];//массив из класса, описание глав + ссылка
         WebClient webClient = new WebClient();
 
@@ -136,7 +140,7 @@ namespace WindowsFormsApplication2
         private void stop_Click(object sender, EventArgs e)
         {   //отключение потока загрузки
             //настройка gui
-
+                err = 0;
                 backgroundWorker1.CancelAsync();
                 Text_way_to_save.Enabled = true;
                 Link_to_manga.Enabled = true;
@@ -151,11 +155,14 @@ namespace WindowsFormsApplication2
                 pause_download = false;
                 pause.Text = "Пауза";
                 pause.Enabled = false;
+                down_paret_now.Text = "Скачиваемая глава: Закачка не производится";
+
 
         }
 
         private void Download_this_Click(object sender, EventArgs e)
         {   //try
+            err = 0;
             //настройка gui
             stop.Enabled = true;
             Text_way_to_save.Enabled = false;
@@ -170,6 +177,7 @@ namespace WindowsFormsApplication2
             pause_download = false;
             pause.Text = "Пауза";
             pause.Enabled = true;
+            progressBar1.Value = 0;//сброс прогресс бара
 
 
 
@@ -177,11 +185,6 @@ namespace WindowsFormsApplication2
             status.ForeColor = Color.Green;
             //конфиги прогрес бара
 
-            for (int i = 0; i < Found_parts.Items.Count; i++)
-            {
-                if (Found_parts.GetItemChecked(i) == true) lost_part++;
-            }
-            progressBar1.Maximum = lost_part;
             progressBar1.Value = 0;
             //многопоточность настройки
 
@@ -201,7 +204,7 @@ namespace WindowsFormsApplication2
          
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            string subpath;//путь к главам
+            subpath="";//путь к главам
             string p1;
             string p2;
             string p3;
@@ -211,11 +214,13 @@ namespace WindowsFormsApplication2
             int s4;
             int start;
             int end;
+            count_page = 1;
+
             string buf1;
             string buf3;
             int ibuf1;//буфер
-            int count;
             string fullpath;
+
             lost_part = 0;
             schet = 0;//счетчик прогресс бара
             end_potok=0;
@@ -223,10 +228,14 @@ namespace WindowsFormsApplication2
              //   backgroundWorker1.ReportProgress(i);
                // Thread.Sleep(50);
                    string path = Text_way_to_save.Text + @"\" + global_name;
+                   path = func_saver.filter_disk_folder(path);
+                   Console.WriteLine(path);
+
             if (path.IndexOf(@":\") == -1)
             {
-                status.Text = "Неверно указан путь";
-                status.ForeColor = Color.Red;
+                err = 1;
+                backgroundWorker1.ReportProgress(err, "err");
+
             }
             else
             {
@@ -250,20 +259,42 @@ namespace WindowsFormsApplication2
                         if (Found_parts.GetItemChecked(i) == true && backgroundWorker1.CancellationPending != true)
                         {
                             subpath = arr_mang_inf[i].sub_name.ToString();
+                            subpath = func_saver.filter_foldername(subpath);
+                            Console.WriteLine(subpath);
                             dirInfo.CreateSubdirectory(subpath);//создана папка для главы
-                            fullpath = Text_way_to_save.Text + @"\" + global_name + @"\" + subpath;
+                            Console.WriteLine(subpath);
+                            fullpath = path + @"\" + subpath;
+                            percent = i;
+                            backgroundWorker1.ReportProgress(percent, subpath);
+
                             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(arr_mang_inf[i].link + @"?mature=1");//запрос
                             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();//ответ
-
                             StreamReader stream = new StreamReader(
                                   resp.GetResponseStream(), Encoding.UTF8);//созданеи потока для получения ответа, перекодтровать в utf8
                             HTML_first_page = stream.ReadToEnd();//слушать поток до конца
                             // label2.Text = arr_mang_inf[i].link;
+
+                            schet = 0;
                             start = HTML_first_page.IndexOf(@"rm_h.init");
                             end = HTML_first_page.IndexOf(@"</script>", start);
                             buf1 = HTML_first_page.Substring(start, end - start);
                             start = end = s1 = 0;
-                            count = 1;
+                            count_page = 1;
+                            //счетчик страниц в главе
+                            while (s1 != -1)
+                            {   //buf1 не трогать
+                               
+
+                                s1 = buf1.IndexOf(@"['", start);
+                                start = buf1.IndexOf("],", start + 1);
+                                s1 = buf1.IndexOf(@"['", start);
+                                schet++;
+
+                            }
+                            backgroundWorker1.ReportProgress(schet, "");
+
+                            start = end = s1 = 0;
+                            count_page = 1;
                             while (s1 != -1 && backgroundWorker1.CancellationPending != true)
                             {
                                 while (pause_download) System.Threading.Thread.Sleep(1000);//пауза
@@ -285,13 +316,11 @@ namespace WindowsFormsApplication2
                                 Console.WriteLine(fullpath);
                                 Console.WriteLine(buf3);
                                 buf3 = func_saver.filter_nowindows_symbols(buf3);
-                                webClient.DownloadFile(buf2, fullpath + @"\" + buf3);
-                                count++;
-                                backgroundWorker1.ReportProgress(schet, buf2);
+                                webClient.DownloadFile(buf2, fullpath + @"\" + count_page+".jpg");
+                                backgroundWorker1.ReportProgress(count_page, buf2);
+                                count_page++;
 
                             }
-                            schet++;
-                            backgroundWorker1.ReportProgress(schet);
                             end_potok = 1;
 
                            // System.Threading.Thread.Sleep(100);
@@ -311,10 +340,13 @@ namespace WindowsFormsApplication2
                     {
                         if (Found_parts.GetItemChecked(i) == true && backgroundWorker1.CancellationPending != true)
                         {
-                            while (pause_download) System.Threading.Thread.Sleep(1000);//пауза
                             subpath = arr_mang_inf[i].sub_name.ToString();
+                            subpath = func_saver.filter_foldername(subpath);
                             dirInfo.CreateSubdirectory(subpath);//создана папка для главы
-                            fullpath = Text_way_to_save.Text + @"\" + global_name + @"\" + subpath;
+                            fullpath = path + @"\" + subpath;
+                            percent = i;
+                            backgroundWorker1.ReportProgress(percent, subpath);
+
                             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(arr_mang_inf[i].link);//запрос
                             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();//ответ
 
@@ -327,12 +359,28 @@ namespace WindowsFormsApplication2
                             s1 = HTML_first_page.IndexOf("images: [[");
                             s2 = HTML_first_page.IndexOf("page", s1);
                             buf3 = HTML_first_page.Substring(s1 + 9, s2 - s1 - 20);//получение массива страниц
+                            schet = 0;
                             start = end = s1 = 0;
-                            count = 1;
+                            count_page = 1;
+
+                            //счетчик страниц
+                            while (s1 != -1)
+                            {
+                                s1 = buf3.IndexOf(@"[", start);
+                                start = buf3.IndexOf("]", s1 + 1);//найти конец старого массива с данныеми
+                                s1 = buf3.IndexOf(@"[", start);//найти начало нового массива с данными
+                                schet++;
+                            }
+
+                            backgroundWorker1.ReportProgress(schet, "");
+
+                            start = end = s1 = 0;
+                            count_page = 1;
 
 
                             while (s1 != -1 && backgroundWorker1.CancellationPending != true)
                             {
+                                while (pause_download) System.Threading.Thread.Sleep(1000);//пауза
                                 s1 = buf3.IndexOf(@"[", start);
                                 s2 = buf3.IndexOf(@",", s1 + 1);
                                 p1 = buf3.Substring(s1 + 2, s2 - s1 - 3);
@@ -341,12 +389,83 @@ namespace WindowsFormsApplication2
                                 s1 = buf3.IndexOf(@"[", start);//найти начало нового массива с данными
                                 // webClient.DownloadFile(@"http://e1.adultmanga.me/auto/06/46/98/Nightmare_funk_001_127.png", Text_way_to_save.Text + @"\1.png");
                                 p1 = func_saver.filter_nowindows_symbols(p1);
-                                webClient.DownloadFile(buf2, fullpath + @"\" + p1);
-                                count++;
-                                backgroundWorker1.ReportProgress(schet, buf2);
+                                webClient.DownloadFile(buf2, fullpath + @"\" + count_page+".jpg");
+                                count_page++;
+                                backgroundWorker1.ReportProgress(count_page, buf2);
 
                             }
-                            schet++;
+
+                            //System.Threading.Thread.Sleep(100);
+                            end_potok = 1;
+
+                        }
+                    }
+                }
+                if (site_link.IndexOf("mangachan.ru") != -1)
+                {
+                    for (int i = 0; i < Found_parts.Items.Count; i++)
+                    {   
+                        if (Found_parts.GetItemChecked(i) == true && backgroundWorker1.CancellationPending != true)
+                        {
+                            
+                            subpath = arr_mang_inf[i].sub_name.ToString();
+                            subpath = func_saver.filter_foldername(subpath);
+                            percent = i;
+                            backgroundWorker1.ReportProgress(percent,subpath);
+
+                            dirInfo.CreateSubdirectory(subpath);//создана папка для главы
+                            fullpath = path + @"\" + subpath;
+                            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(arr_mang_inf[i].link);//запрос
+                            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();//ответ
+
+                            StreamReader stream = new StreamReader(
+                                  resp.GetResponseStream(), Encoding.UTF8);//созданеи потока для получения ответа, перекодтровать в utf8
+                            HTML_first_page = stream.ReadToEnd();//слушать поток до конца
+                            s1 = HTML_first_page.IndexOf("\"thumbs\":[\"");//маска начала списка глав
+                            s2 = HTML_first_page.IndexOf("\"]", s1);//маска конца списка глав
+                            buf1 = HTML_first_page.Substring(s1 + 11, s2 - s1 - 10);//прямая ссылка на сервер на папку, содержащую мангу
+                            schet = 0;
+                            start = end = s1 = 0;
+                            count_page = 1;
+                            Console.WriteLine(buf1);
+                            while (s1 != -1)
+                            {
+                                //здесь buf1 не трогать
+                                s1 = buf1.IndexOf(@"http://", start);
+                                start = s1 + 1;
+                                s1 = buf1.IndexOf(",", start);//проверка последний ли адрес конец массива
+                                schet++;                            //подсчет страниц
+
+                            }
+
+                            backgroundWorker1.ReportProgress(schet, "");
+
+
+                            start = end = s1 = 0;
+                            count_page = 1;
+                            Console.WriteLine(buf1);
+                            while (s1 != -1 && backgroundWorker1.CancellationPending != true)
+                            {   
+                                //здесь buf1 не трогать
+                                while (pause_download) System.Threading.Thread.Sleep(1000);//пауза
+                                s1 = buf1.IndexOf(@"http://", start);
+                                start=s1+1;
+                                s2 = buf1.IndexOf("\"", s1 + 1);//конец ссылки
+                                p1 = buf1.Substring(s1, s2-s1 );//ссылка на миниатюру. не оьраьотана
+                                buf2 = p1.Substring(7, p1.IndexOf("."));//нахождение img части ссылки
+                                buf3 = buf2.Replace("im", "img");
+                                p1 = p1.Replace(buf2, buf3);
+                                Console.WriteLine(p1);
+                                p1 = p1.Replace("manganew_thumbs", "manganew");//замененная ссылка. верная
+                                buf2 = p1;
+                                s1 = buf1.IndexOf(",", start);//проверка последний ли адрес конец массива
+                                // webClient.DownloadFile(@"http://e1.adultmanga.me/auto/06/46/98/Nightmare_funk_001_127.png", Text_way_to_save.Text + @"\1.png");
+
+                                webClient.DownloadFile(buf2, fullpath + @"\" + count_page+".jpg");
+                                count_page++;                            //подсчет страниц
+                                backgroundWorker1.ReportProgress(count_page, buf2);
+                                
+                            }
                             backgroundWorker1.ReportProgress(schet);
 
                             //System.Threading.Thread.Sleep(100);
@@ -361,13 +480,21 @@ namespace WindowsFormsApplication2
             }
         }
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            progressBar1.Value = schet;
+        {   if(err==1)
+             {
+                 status.Text = "Неверно указан путь";
+                 status.ForeColor = Color.Red;
+             }
+            progressBar1.Maximum = schet;
+            down_paret_now.Text = "Скачиваемая глава: " + subpath;
+            progressBar1.Value = count_page-1;
             display_link.Text = "Ссылка на закачиваемую страницу: " + buf2;
             //label1.Text = (e.ProgressPercentage.ToString() + "%");
         }
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            err = 0;
+            progressBar1.Value = schet;
             Text_way_to_save.Enabled = true;
             Link_to_manga.Enabled = true;
             Found_parts.Enabled = true;
@@ -382,7 +509,7 @@ namespace WindowsFormsApplication2
             pause.Enabled = false;
 
 
-
+           down_paret_now.Text = "Скачиваемая глава: Закачка не производится";
            status.Text = "Статус ОК. Закачка не производится";
           //  if (end_potok == 0) status.Text = "Закачка прервана";
             display_link.Text = "Ссылка на закачиваемую страницу: Закачка не производится";
@@ -434,7 +561,7 @@ namespace WindowsFormsApplication2
                 }
                 if (site_link.IndexOf(@"/", site_link.Length - 2) != -1) site_link = site_link.Remove(site_link.Length - 1, 1);//проверка на последний слеш
                 if (site_link.IndexOf("mintmanga.com") != -1 || site_link.IndexOf("readmanga.me") != -1)
-                {
+                {   
                     HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(site_link);//запрос
                     HttpWebResponse resp = (HttpWebResponse)req.GetResponse();//ответ
 
@@ -536,6 +663,60 @@ namespace WindowsFormsApplication2
 
 
                 }
+                if (site_link.IndexOf("mangachan.ru") != -1)
+                {
+                    string substr;
+                    int pos_substr1;
+                    int pos_substr2;
+                    string glavs_nofilter;//html Кусок-таблица с главами
+                    string glav;//ссылка на главу
+                    HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(site_link);//запрос
+                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();//ответ
+
+                    StreamReader stream = new StreamReader(
+                          resp.GetResponseStream(), Encoding.UTF8);//созданеи потока для получения ответа, перекодтровать в utf8
+                    HTML_first_page = stream.ReadToEnd();//слушать поток до конца
+                    substr="href='"+site_link;//маска названия
+                    pos_substr1 = HTML_first_page.IndexOf(substr);
+                    pos_substr1 = HTML_first_page.IndexOf(">", pos_substr1);
+                    pos_substr2 = HTML_first_page.IndexOf("</a>", pos_substr1);
+                    global_name = HTML_first_page.Substring(pos_substr1 + 1, pos_substr2 - pos_substr1-1);
+                    name=global_name;
+                    Console.WriteLine(global_name);
+
+                    status.Text = "Статус ОК";
+                    status.ForeColor = Color.Green;
+
+                    substr="<table class=\"table_cha\"";//маска начала таблицы
+                    pos_substr1 = HTML_first_page.IndexOf(substr);
+                    pos_substr1 = HTML_first_page.IndexOf("<td><tr", pos_substr1);
+                    pos_substr2 = HTML_first_page.IndexOf("</table>", pos_substr1);
+                    glavs_nofilter = HTML_first_page.Substring(pos_substr1 + 1, pos_substr2 - pos_substr1-1);
+
+                    //поиск подстроки с названием и ссылкой
+                    while ((start = glavs_nofilter.IndexOf("<a href='", start + 1)) != -1)
+                    {
+                        pos_substr1 = glavs_nofilter.IndexOf("' title", start);
+                        pos_substr2=pos_substr1-start-9;
+                        link = glavs_nofilter.Substring(start+9, pos_substr2);//блок с сылкой
+                        Console.WriteLine(link);
+                        link = "http://mangachan.ru" + link;
+                        Console.WriteLine(link);
+                        //получение названия главы
+                        start = glavs_nofilter.IndexOf(">", pos_substr1);
+                        pos_substr1=glavs_nofilter.IndexOf("</", pos_substr1);
+                        pos_substr2=pos_substr1-start-1;
+                        sn = glavs_nofilter.Substring(start+1, pos_substr2);//блок с названием главы
+                        sn=sn.Replace("&nbsp;","");
+                        Console.WriteLine(sn);
+                        arr_mang_inf[i] = new mang_info(link, name, sn);//создание массива объектов -глав
+                        Found_parts.Items.Add(sn, true);//добавление глав в chekbox found_parts
+                        i++;
+                        About_found.Text = "Найдено глав" + i.ToString();
+                    }
+
+                    
+                }
             }
             catch (Exception ex)
             {
@@ -588,6 +769,16 @@ namespace WindowsFormsApplication2
         {   pause_download=!pause_download;
             if (pause_download == false) pause.Text = "Пауза";
             if (pause_download == true) pause.Text="Продолжить загрузку";
+        }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
 
 
@@ -645,6 +836,32 @@ namespace WindowsFormsApplication2
             str = str.Replace(@"'", " ");
             return str;
         }
+        public string filter_foldername(string str)
+        {   
+            str = str.Replace(@">", " ");
+            str = str.Replace(@"<", " ");
+            str = str.Replace(@"?", " ");
+            str = str.Replace(@":", "");
+            str = str.Replace(@"|", " ");
+            str = str.Replace(@"*", " ");
+            str = str.Replace(@"'", " ");
+            return str;
+        }
+        public string filter_disk_folder(string str) 
+        {
+            str = str.Replace(@">", " ");
+            str = str.Replace(@"<", " ");
+            str = str.Replace(@"?", " ");
+            str = str.Replace(@":", "");
+            str = str.Replace(@"|", " ");
+            str = str.Replace(@"*", " ");
+            //    str = str.Replace(@"/", " ");
+            str = str.Replace(@"'", " ");
+            str = str.Insert(1, @":");
+            return str;
+
+        }
+
     }
 
 

@@ -51,12 +51,15 @@
             this.display_link = new System.Windows.Forms.Label();
             this.pause = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.down_paret_now = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Way_to_save
             // 
-            this.Way_to_save.Location = new System.Drawing.Point(458, 48);
+            this.Way_to_save.Location = new System.Drawing.Point(458, 50);
             this.Way_to_save.Name = "Way_to_save";
             this.Way_to_save.Size = new System.Drawing.Size(158, 20);
             this.Way_to_save.TabIndex = 0;
@@ -76,7 +79,7 @@
             // 
             // Text_way_to_save
             // 
-            this.Text_way_to_save.Location = new System.Drawing.Point(5, 47);
+            this.Text_way_to_save.Location = new System.Drawing.Point(5, 50);
             this.Text_way_to_save.Name = "Text_way_to_save";
             this.Text_way_to_save.Size = new System.Drawing.Size(447, 20);
             this.Text_way_to_save.TabIndex = 2;
@@ -84,7 +87,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 30);
+            this.label1.Location = new System.Drawing.Point(4, 36);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(142, 13);
             this.label1.TabIndex = 3;
@@ -93,15 +96,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 67);
+            this.label2.Location = new System.Drawing.Point(2, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(94, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Ссылка на мангу";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // Link_to_manga
             // 
-            this.Link_to_manga.Location = new System.Drawing.Point(5, 83);
+            this.Link_to_manga.Location = new System.Drawing.Point(5, 86);
             this.Link_to_manga.Name = "Link_to_manga";
             this.Link_to_manga.Size = new System.Drawing.Size(447, 20);
             this.Link_to_manga.TabIndex = 5;
@@ -119,7 +123,7 @@
             // 
             // Search_parts
             // 
-            this.Search_parts.Location = new System.Drawing.Point(458, 83);
+            this.Search_parts.Location = new System.Drawing.Point(458, 86);
             this.Search_parts.Name = "Search_parts";
             this.Search_parts.Size = new System.Drawing.Size(158, 20);
             this.Search_parts.TabIndex = 7;
@@ -184,7 +188,7 @@
             this.status.AutoSize = true;
             this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.status.ForeColor = System.Drawing.Color.Green;
-            this.status.Location = new System.Drawing.Point(110, 501);
+            this.status.Location = new System.Drawing.Point(110, 514);
             this.status.Name = "status";
             this.status.Size = new System.Drawing.Size(91, 13);
             this.status.TabIndex = 14;
@@ -195,17 +199,17 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(4, 9);
+            this.label4.Location = new System.Drawing.Point(2, 9);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(548, 13);
+            this.label4.Size = new System.Drawing.Size(567, 13);
             this.label4.TabIndex = 16;
-            this.label4.Text = "Программа для скачивания манги с сайта http://mintmanga.com, http://readmanga.me/" +
-    " и http://manga24.ru/";
+            this.label4.Text = "Программа для скачивания манги с сайов http://mintmanga.com, http://readmanga.me/" +
+    ", http://mangachan.ru/  и";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(15, 483);
+            this.progressBar1.Location = new System.Drawing.Point(5, 499);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(597, 12);
             this.progressBar1.TabIndex = 17;
@@ -213,12 +217,12 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 467);
+            this.label5.Location = new System.Drawing.Point(2, 480);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(528, 13);
+            this.label5.Size = new System.Drawing.Size(608, 13);
             this.label5.TabIndex = 18;
-            this.label5.Text = "Прогресс скачивания. Во время скачивания в программе невозможно производить други" +
-    "е действия.";
+            this.label5.Text = "Прогресс скачивания текущей главы. Во время скачивания в программе невозможно про" +
+    "изводить другие действия.";
             this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // stop
@@ -236,7 +240,7 @@
             // display_link
             // 
             this.display_link.AutoSize = true;
-            this.display_link.Location = new System.Drawing.Point(12, 450);
+            this.display_link.Location = new System.Drawing.Point(2, 452);
             this.display_link.Name = "display_link";
             this.display_link.Size = new System.Drawing.Size(324, 13);
             this.display_link.TabIndex = 20;
@@ -259,28 +263,64 @@
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(428, 526);
+            this.textBox1.Location = new System.Drawing.Point(432, 524);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(184, 13);
             this.textBox1.TabIndex = 24;
             this.textBox1.Text = "Мои контакты DevDimit@yandex.ru ";
+            // 
+            // down_paret_now
+            // 
+            this.down_paret_now.AutoSize = true;
+            this.down_paret_now.Location = new System.Drawing.Point(2, 467);
+            this.down_paret_now.Name = "down_paret_now";
+            this.down_paret_now.Size = new System.Drawing.Size(244, 13);
+            this.down_paret_now.TabIndex = 27;
+            this.down_paret_now.Text = "Скачиваемая глава: Закачка не производится";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(99, 13);
+            this.label6.TabIndex = 28;
+            this.label6.Text = "http://manga24.ru/";
             // 
             // textBox2
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Location = new System.Drawing.Point(199, 552);
+            this.textBox2.Location = new System.Drawing.Point(5, 540);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(413, 13);
-            this.textBox2.TabIndex = 25;
-            this.textBox2.Text = "Ссылка на исходный код GitHub https://github.com/devdimit/MangaDownloader";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(597, 13);
+            this.textBox2.TabIndex = 29;
+            this.textBox2.Text = "Если вам понравилась данная программа то можете отблагодарить автора отправив люб" +
+    "ую сумму на QIWI кошелек";
+            // 
+            // textBox3
+            // 
+            this.textBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox3.Location = new System.Drawing.Point(5, 554);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(597, 13);
+            this.textBox3.TabIndex = 30;
+            this.textBox3.Text = "+79115613305";
+            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 571);
+            this.ClientSize = new System.Drawing.Size(621, 571);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.down_paret_now);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.pause);
             this.Controls.Add(this.display_link);
@@ -335,7 +375,10 @@
         private System.Windows.Forms.Label display_link;
         private System.Windows.Forms.Button pause;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label down_paret_now;
+        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 
