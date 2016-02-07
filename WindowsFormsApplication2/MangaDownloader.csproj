@@ -38,6 +38,9 @@
     <ApplicationIcon>ico%283%29.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\..\..\..\Users\ТВ\Desktop\DotNetZipLib-DevKit-v1.9\DotNetZip-v1.9\Release\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

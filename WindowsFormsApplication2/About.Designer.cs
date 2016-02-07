@@ -43,7 +43,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 30);
+            this.label1.Location = new System.Drawing.Point(28, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 0;
@@ -52,29 +52,29 @@
             // 
             this.podderzhka.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.podderzhka.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.podderzhka.Location = new System.Drawing.Point(1, 62);
+            this.podderzhka.Location = new System.Drawing.Point(17, 62);
             this.podderzhka.Name = "podderzhka";
             this.podderzhka.ReadOnly = true;
-            this.podderzhka.Size = new System.Drawing.Size(301, 13);
+            this.podderzhka.Size = new System.Drawing.Size(583, 13);
             this.podderzhka.TabIndex = 2;
-            this.podderzhka.Text = "readmanga.me  mintmanga.com manga24.ru  mangachan.ru";
+            this.podderzhka.Text = "readmanga.me  mintmanga.com manga24.ru  mangachan.ru, hentaichan.ru";
             // 
             // version
             // 
             this.version.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.version.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.version.Location = new System.Drawing.Point(1, 24);
+            this.version.Location = new System.Drawing.Point(17, 24);
             this.version.Name = "version";
             this.version.ReadOnly = true;
             this.version.Size = new System.Drawing.Size(100, 13);
             this.version.TabIndex = 3;
-            this.version.Text = "Версия v1.03";
+            this.version.Text = "Версия v1.04";
             // 
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(1, 43);
+            this.textBox1.Location = new System.Drawing.Point(17, 43);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(357, 13);
@@ -86,7 +86,7 @@
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Location = new System.Drawing.Point(1, 100);
+            this.textBox2.Location = new System.Drawing.Point(17, 100);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(537, 13);
@@ -99,7 +99,7 @@
             // 
             this.textBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox3.Location = new System.Drawing.Point(1, 81);
+            this.textBox3.Location = new System.Drawing.Point(17, 81);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(537, 13);
@@ -110,7 +110,7 @@
             // 
             this.textBox4.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox4.Location = new System.Drawing.Point(1, 117);
+            this.textBox4.Location = new System.Drawing.Point(17, 117);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(537, 13);
@@ -121,7 +121,7 @@
             // 
             this.textBox5.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox5.Location = new System.Drawing.Point(1, 134);
+            this.textBox5.Location = new System.Drawing.Point(17, 134);
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(537, 13);
@@ -133,7 +133,7 @@
             // 
             this.textBox6.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox6.Location = new System.Drawing.Point(12, 167);
+            this.textBox6.Location = new System.Drawing.Point(28, 167);
             this.textBox6.Name = "textBox6";
             this.textBox6.ReadOnly = true;
             this.textBox6.Size = new System.Drawing.Size(597, 13);
@@ -145,7 +145,7 @@
             // 
             this.textBox7.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox7.Location = new System.Drawing.Point(0, 153);
+            this.textBox7.Location = new System.Drawing.Point(16, 153);
             this.textBox7.Name = "textBox7";
             this.textBox7.ReadOnly = true;
             this.textBox7.Size = new System.Drawing.Size(597, 13);
@@ -157,7 +157,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 212);
+            this.ClientSize = new System.Drawing.Size(612, 201);
             this.Controls.Add(this.textBox6);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox5);
